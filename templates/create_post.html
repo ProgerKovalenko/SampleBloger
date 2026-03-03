@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Создать запись{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Новая запись в блог</h2>
+        <form method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">Заголовок</label>
+                <input type="text" name="title" class="form-control" id="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Текст статьи</label>
+                <textarea name="content" class="form-control" id="content" rows="10" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="author" class="form-label">Автор</label>
+                <input type="text" name="author" class="form-control" id="author" required>
+            </div>
+            <button type="submit" class="btn btn-success">Опубликовать</button>
+            <a href="/" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
