@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование: {{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2>Редактировать статью</h2>
+
+        <form method="post">
+            <div class="mb-3">
+                <label for="title" class="form-label">Заголовок</label>
+                <input type="text" name="title" class="form-control" id="title"
+                       value="{{ post.title }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="author" class="form-label">Автор (только чтение)</label>
+                <input type="text" name="author" class="form-control" id="author"
+                       value="{{ post.author }}" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Текст статьи</label>
+                <textarea name="content" class="form-control" id="content"
+                          rows="10" required>{{ post.content }}</textarea>
+            </div>
+
+            <div class="d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                <a href="/post/{{ post.id }}" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

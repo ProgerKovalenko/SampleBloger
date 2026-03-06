@@ -1,4 +1,7 @@
 from fastapi import FastAPI, Request, Depends, Form, HTTPException,Query
+from urllib import request
+
+from fastapi import FastAPI, Request, Depends, Form, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.annotation import Annotated
 from typing import Annotated
@@ -38,6 +41,52 @@ async def get_post(request: Request, post_id: int, db: Session = Depends(get_db)
     return templates.TemplateResponse(
         "post_detail.html", {"request": request, "post": post}
     )
+
+
+@app.post("/post/{post_id}/delete")
+async def delete_post(
+    post_id: int, db: Session = Depends(get_db), secret_key: str = Form(...)
+):
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    if secret_key == "123":
+        db.delete(post)
+        db.commit()
+        return RedirectResponse(url="/", status_code=303)
+    else:
+        return "Not authorized"
+
+
+@app.get("/post/{post_id}/update")
+async def update_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+    return templates.TemplateResponse(
+        "update_post.html", {"request": request, "post": post}
+    )
+
+
+@app.post("/post/{post_id}/update")
+async def update_post(
+    post_id: int,
+    title: str = Form(...),
+    content: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    post = db.query(models.Post).filter(models.Post.id == post_id).first()
+
+    post.title = title
+    post.content = content
+
+    db.commit()
+
+    return RedirectResponse(url="/", status_code=303)
 
 
 @app.post("/create")

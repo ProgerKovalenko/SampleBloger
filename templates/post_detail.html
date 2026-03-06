@@ -4,6 +4,7 @@
 
 {% block content %}
 <div class="row justify-content-center">
+
     <div class="col-md-10">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -28,6 +29,19 @@
 
         <div class="mt-5 border-top pt-3">
             <a href="/" class="btn btn-outline-secondary btn-sm">Вернуться на главную</a>
+        </div>
+
+        <div class="mt-4 p-3 border rounded bg-light">
+            <p class="text-danger">Опасная зона:</p>
+            <form action="/post/{{ post.id }}/delete" method="post">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены?')">
+                    Удалить этот пост
+                </button>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/post/{{ post.id }}/update">Редактировать</a></li>
+                </ol>
+                <input type="password" name="secret_key">
+            </form>
         </div>
     </div>
 </div>
