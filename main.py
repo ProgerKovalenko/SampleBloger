@@ -1,5 +1,7 @@
-from fastapi import FastAPI, Request, Depends, Form, HTTPException
+from fastapi import FastAPI, Request, Depends, Form, HTTPException,Query
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.annotation import Annotated
+from typing import Annotated
 from database import SessionLocal, engine
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -57,9 +59,11 @@ async def add_post(
 
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request, db: Session = Depends(get_db)):
-    posts = db.query(models.Post).order_by(models.Post.created_at.desc()).all()
-
+async def home( request: Request,q:Annotated[str|None,Query(min_length=0, max_length=20)] = None, db: Session = Depends(get_db)):
+    if q:
+        posts = db.query(models.Post).filter(models.Post.title.contains(q)).all()
+    else:
+        posts = db.query(models.Post).order_by(models.Post.created_at.desc()).all()
     return templates.TemplateResponse(
         "index.html", {"request": request, "posts": posts}
     )
